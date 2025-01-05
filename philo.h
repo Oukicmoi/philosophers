@@ -6,7 +6,7 @@
 /*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 17:58:40 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/01/05 00:43:06 by gtraiman         ###   ########.fr       */
+/*   Updated: 2025/01/05 01:12:03 by gtraiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@
         int id;
         int lfork;
         int rfork;
+        int lmeal;
         pthread_t thread;
         struct s_data *data;
     }   t_philo;
@@ -47,9 +48,10 @@ typedef struct s_data
     int ttdie;
     int tteat;
     int ttsleep;
-    
+
     int must_eat_count;
     int round;
+    int isdead;
     pthread_mutex_t *forks;
     pthread_mutex_t wmutex;
     t_philo *philo;
@@ -63,6 +65,9 @@ int init_data(t_data *data, int ac, char **av);
 void cleanup(t_data *data);
 void take_forks_and_eat(t_philo *philo);
 void *philo_routine(void *arg);
-void go_to_sleep_and_think(t_philo *philo);
+int go_to_sleep_and_think(t_philo *philo);
+long get_current_time_in_ms(void);
+int testdeath(t_philo *philo);
+
 
 #endif

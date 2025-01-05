@@ -6,7 +6,7 @@
 /*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 17:58:26 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/01/05 00:36:25 by gtraiman         ###   ########.fr       */
+/*   Updated: 2025/01/05 01:04:35 by gtraiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,8 @@ void *philo_routine(void *arg)
             else
                 usleep(1000);
         }
-        go_to_sleep_and_think(philo);
+        if(go_to_sleep_and_think(philo) == 1)
+            return(NULL);
 	data->round++;
     }
     return (NULL);
@@ -85,6 +86,7 @@ int init_philo(t_data *data)
 	i = 0;
 	while (i < data->philon)
 	{
+        	data->philo[i].lmeal = 0;
 		data->philo[i].id = i + 1;
 		data->philo[i].lfork = i;
 		data->philo[i].rfork = (i + 1) % data->philon;
