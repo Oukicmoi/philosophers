@@ -6,7 +6,7 @@
 /*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 17:41:58 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/01/04 22:29:57 by gtraiman         ###   ########.fr       */
+/*   Updated: 2025/01/05 21:53:31 by gtraiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ int main(int ac, char **av)
     t_data data;
     int i;
 
-    if (ac < 5 || ac > 6)
+    if (ac < 5 || ac > 6 || parse(av) != 0)
     {
         printf("Error\n");
         return (1);
@@ -65,7 +65,7 @@ int main(int ac, char **av)
     {
         printf("Error\n");
         cleanup(&data);
-        return (1);
+        return (cleanup(&data), 1);
     }
     i = 0;
     while (i < data.philon)

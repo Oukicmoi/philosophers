@@ -6,7 +6,7 @@
 /*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 18:14:34 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/01/05 01:21:02 by gtraiman         ###   ########.fr       */
+/*   Updated: 2025/01/05 23:58:56 by gtraiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,8 @@ void cleanup(t_data *data)
         i++;
     }
     pthread_mutex_destroy(&data->wmutex);
+    pthread_mutex_destroy(&data->round);
+    pthread_mutex_destroy(&data->dead_mutex);
     free(data->forks);
     free(data->philo);
 }
@@ -59,16 +61,23 @@ void take_forks_and_eat(t_philo *philo)
 
     // Prendre la fourchette gauche
     pthread_mutex_lock(&data->forks[philo->lfork]);
-    printf("%d has taken a fork\n", philo->id);
+    pthread_mutex_lock(&data->wmutex);
+    printf("%ld %d has taken a fork\n", getime() - data->start, philo->id);
+    pthread_mutex_unlock(&data->wmutex);
 
     // Prendre la fourchette droite
     pthread_mutex_lock(&data->forks[philo->rfork]);
-    printf("%d has taken a fork\n", philo->id);
+    pthread_mutex_lock(&data->wmutex);
+    printf("%ld %d has taken a fork\n", getime() - data->start, philo->id);
+    pthread_mutex_unlock(&data->wmutex);
 
-    printf("%d is eating\n", philo->id);
+
+    pthread_mutex_lock(&data->wmutex);
+    printf("%ld %d is eating\n", getime() - data->start, philo->id);
+    pthread_mutex_unlock(&data->wmutex);
     // Ici tu peux enregistrer philo->last_meal_time = get_current_time_in_ms();
     usleep(data->tteat * 1000);
-    philo->lmeal = get_current_time_in_ms();
+    philo->lmeal = getime();
     // Reposer les fourchettes
     pthread_mutex_unlock(&data->forks[philo->rfork]);
     pthread_mutex_unlock(&data->forks[philo->lfork]);
@@ -80,11 +89,15 @@ int go_to_sleep_and_think(t_philo *philo)
 
     if(testdeath(philo) == 1)
         return(1);
-    printf("%d is sleeping\n", philo->id);
+    pthread_mutex_lock(&data->wmutex);
+    printf("%ld %d is sleeping\n", getime() - data->start, philo->id);
+    pthread_mutex_unlock(&data->wmutex);
     usleep(data->ttsleep * 1000);
     if(testdeath(philo) == 1)
         return(1);
-    printf("%d is thinking\n", philo->id);
+    pthread_mutex_lock(&data->wmutex);
+    printf("%ld %d is thinking\n", getime() - data->start, philo->id);
+    pthread_mutex_unlock(&data->wmutex);
     usleep(data->tteat * 900);
     if(testdeath(philo) == 1)
         return(1);
@@ -94,32 +107,36 @@ int go_to_sleep_and_think(t_philo *philo)
 int testdeath(t_philo *philo)
 {
     t_data *data = philo->data;
-    
-    pthread_mutex_lock()
-    if(data->isdead == 1)
-        return(1);
-    if(philo->lmeal >= data->ttdie)
+    long now = getime();
+
+    // 1) On lock
+    pthread_mutex_lock(&data->dead_mutex);
+
+    // 2) On check si isdead est déjà mis
+    if (data->isdead == 1)
+    {
+        pthread_mutex_unlock(&data->dead_mutex);
+        return (1);
+    }
+    // 3) On check si ce philo doit mourir
+    if (now - philo->lmeal >= data->ttdie)
     {
         data->isdead = 1;
-        return(printf("%d is dead\n", philo->id), 1);
+        pthread_mutex_unlock(&data->dead_mutex);
+
+        printf("%ld %d is dead\n", now - data->start, philo->id);
+        return (1);
     }
-    return(0);
+
+    // 4) On unlock
+    pthread_mutex_unlock(&data->dead_mutex);
+    return (0);
 }
 
-long get_current_time_in_ms(void)
+
+long getime(void)
 {
     struct timeval tv;
     gettimeofday(&tv, NULL);
     return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
 }
-
-// static void print_action(t_philo *philo, const char *msg)
-// {
-//     long timestamp;
-
-//     pthread_mutex_lock(&philo->data->wmutex); 
-//     // wmutex pour protéger l'accès aux logs
-//     timestamp = get_current_time_in_ms();
-//     printf("%ld %d %s\n", timestamp, philo->id, msg);
-//     pthread_mutex_unlock(&philo->data->wmutex);
-// }
