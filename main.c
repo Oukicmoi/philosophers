@@ -6,7 +6,7 @@
 /*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 17:41:58 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/01/05 21:53:31 by gtraiman         ###   ########.fr       */
+/*   Updated: 2025/01/12 23:13:45 by gtraiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,12 +37,26 @@ int create_philos(t_data *data)
     i = 0;
     while (i < data->philon)
     {
-        if (pthread_create(&data->philo[i].thread, NULL, philo_routine, &data->philo[i]) != 0)
+        if (pthread_create(&data->philo[i].thread, NULL,
+                philo_routine, &data->philo[i]) != 0)
             return (1);
-        i++;
+        // printf("\nallez %d\n", data->philo[i].id);
+        i = i + 2;
+    }
+    // fprintf(stderr,"here");
+    i = 1;
+    while (i < data->philon)
+    {
+        if (pthread_create(&data->philo[i].thread, NULL,
+                philo_routine, &data->philo[i]) != 0)
+            return (1);
+        // printf("\nallez %d\n", data->philo[i].id);
+        i = i + 2;
     }
     return (0);
 }
+
+
 
 
 int main(int ac, char **av)
@@ -51,22 +65,12 @@ int main(int ac, char **av)
     int i;
 
     if (ac < 5 || ac > 6 || parse(av) != 0)
-    {
-        printf("Error\n");
-        return (1);
-    }
-    fprintf(stderr,"here");
+        return (printf("Error\n"), 1);
     if (init_data(&data, ac, av) != 0 || init_philo(&data) != 0)
-    {
-        printf("Error\n");
-        return (1);
-    }
+        return (printf("Error\n"), 1);
     if (create_philos(&data) != 0)
-    {
-        printf("Error\n");
-        cleanup(&data);
-        return (cleanup(&data), 1);
-    }
+        return (printf("Error\n"), cleanup(&data), 1);
+    // printf("nombre de meals manges par le dernier : %d", data.philo[data.philon].emealn);
     i = 0;
     while (i < data.philon)
     {

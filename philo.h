@@ -6,7 +6,7 @@
 /*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 17:58:40 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/01/05 23:58:41 by gtraiman         ###   ########.fr       */
+/*   Updated: 2025/01/12 23:07:15 by gtraiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,10 +37,12 @@
         int id;
         int lfork;
         int rfork;
-        int lmeal;
+        long int lmeal;
+        int emealn;
         pthread_t thread;
         struct s_data *data;
     }   t_philo;
+
 
 typedef struct s_data
 {
@@ -53,9 +55,8 @@ typedef struct s_data
     int isdead;
     long int start;
     pthread_mutex_t *forks;
-    pthread_mutex_t wmutex;
-    pthread_mutex_t dead_mutex;
-    pthread_mutex_t round;
+    pthread_mutex_t mxwrite;
+    pthread_mutex_t mxdead;
     t_philo *philo;
 }   t_data;
 
@@ -70,6 +71,6 @@ void *philo_routine(void *arg);
 int go_to_sleep_and_think(t_philo *philo);
 long getime(void);
 int testdeath(t_philo *philo);
-int	impairoutine(t_philo *philo, t_data *data);
-int	pairoutine(t_philo *philo, t_data *data);
+void print_action(t_philo *philo, char *str);
+
 #endif

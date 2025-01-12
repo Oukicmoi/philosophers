@@ -6,7 +6,7 @@
 /*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 18:14:34 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/01/05 23:58:56 by gtraiman         ###   ########.fr       */
+/*   Updated: 2025/01/12 23:16:25 by gtraiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,87 +49,90 @@ void cleanup(t_data *data)
         pthread_mutex_destroy(&data->forks[i]);
         i++;
     }
-    pthread_mutex_destroy(&data->wmutex);
-    pthread_mutex_destroy(&data->round);
-    pthread_mutex_destroy(&data->dead_mutex);
+    pthread_mutex_destroy(&data->mxwrite);
+    pthread_mutex_destroy(&data->mxdead);
     free(data->forks);
     free(data->philo);
 }
+
 void take_forks_and_eat(t_philo *philo)
 {
-    t_data *data = philo->data;
+	t_data *data = philo->data;
 
-    // Prendre la fourchette gauche
-    pthread_mutex_lock(&data->forks[philo->lfork]);
-    pthread_mutex_lock(&data->wmutex);
-    printf("%ld %d has taken a fork\n", getime() - data->start, philo->id);
-    pthread_mutex_unlock(&data->wmutex);
+	if(testdeath(philo))
+		return ;
+	if (philo->id % 2 == 0)
+	{
+		// Philosophe pair -> prend la fourchette de droite d’abord
+		pthread_mutex_lock(&data->forks[philo->rfork]);
+		print_action(philo, "has taken a fork\n");
+		pthread_mutex_lock(&data->forks[philo->lfork]);
+		print_action(philo, "has taken a fork\n");
+	}
+	else
+	{
+		// Philosophe impair -> prend la fourchette de gauche d’abord
+		pthread_mutex_lock(&data->forks[philo->lfork]);
+		print_action(philo, "has taken a fork\n");
+		pthread_mutex_lock(&data->forks[philo->rfork]);
+		print_action(philo, "has taken a fork\n");
+	}
 
-    // Prendre la fourchette droite
-    pthread_mutex_lock(&data->forks[philo->rfork]);
-    pthread_mutex_lock(&data->wmutex);
-    printf("%ld %d has taken a fork\n", getime() - data->start, philo->id);
-    pthread_mutex_unlock(&data->wmutex);
+	// printf("\nid :%d\n",philo->id);
+	// Manger
+	print_action(philo, "is eating\n");
+	usleep(data->tteat * 1000);
+	philo->lmeal = getime();
+	philo->emealn++;
 
+	// Reposer les fourchettes
+	pthread_mutex_unlock(&data->forks[philo->rfork]);
+	pthread_mutex_unlock(&data->forks[philo->lfork]);
+}
 
-    pthread_mutex_lock(&data->wmutex);
-    printf("%ld %d is eating\n", getime() - data->start, philo->id);
-    pthread_mutex_unlock(&data->wmutex);
-    // Ici tu peux enregistrer philo->last_meal_time = get_current_time_in_ms();
-    usleep(data->tteat * 1000);
-    philo->lmeal = getime();
-    // Reposer les fourchettes
-    pthread_mutex_unlock(&data->forks[philo->rfork]);
-    pthread_mutex_unlock(&data->forks[philo->lfork]);
+void print_action(t_philo *philo, char *str)
+{
+	t_data *data = philo->data;
+    
+	pthread_mutex_lock(&data->mxwrite);
+	printf("%ld %d %s", getime() - data->start, philo->id, str);
+	pthread_mutex_unlock(&data->mxwrite);
 }
 
 int go_to_sleep_and_think(t_philo *philo)
 {
     t_data *data = philo->data;
 
-    if(testdeath(philo) == 1)
-        return(1);
-    pthread_mutex_lock(&data->wmutex);
-    printf("%ld %d is sleeping\n", getime() - data->start, philo->id);
-    pthread_mutex_unlock(&data->wmutex);
-    usleep(data->ttsleep * 1000);
-    if(testdeath(philo) == 1)
-        return(1);
-    pthread_mutex_lock(&data->wmutex);
-    printf("%ld %d is thinking\n", getime() - data->start, philo->id);
-    pthread_mutex_unlock(&data->wmutex);
-    usleep(data->tteat * 900);
-    if(testdeath(philo) == 1)
-        return(1);
+
+	print_action(philo, "is sleeping\n");
+	usleep(data->ttsleep * 1000);
+	if(testdeath(philo))
+		return(0);
+	print_action(philo, "is thinking\n");
+	usleep(data->tteat * 900);
+
     return(0);
 }
 
 int testdeath(t_philo *philo)
 {
     t_data *data = philo->data;
-    long now = getime();
+    long int now = getime();
 
-    // 1) On lock
-    pthread_mutex_lock(&data->dead_mutex);
-
-    // 2) On check si isdead est déjà mis
+    pthread_mutex_lock(&data->mxdead);
     if (data->isdead == 1)
     {
-        pthread_mutex_unlock(&data->dead_mutex);
+        pthread_mutex_unlock(&data->mxdead);
         return (1);
     }
-    // 3) On check si ce philo doit mourir
     if (now - philo->lmeal >= data->ttdie)
     {
         data->isdead = 1;
-        pthread_mutex_unlock(&data->dead_mutex);
-
-        printf("%ld %d is dead\n", now - data->start, philo->id);
+        pthread_mutex_unlock(&data->mxdead);
+        print_action(philo, "is dead\n");
         return (1);
     }
-
-    // 4) On unlock
-    pthread_mutex_unlock(&data->dead_mutex);
+    pthread_mutex_unlock(&data->mxdead);
     return (0);
 }
 

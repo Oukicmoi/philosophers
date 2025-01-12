@@ -6,7 +6,7 @@
 /*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 17:58:26 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/01/06 00:02:11 by gtraiman         ###   ########.fr       */
+/*   Updated: 2025/01/12 22:01:24 by gtraiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,10 +39,8 @@ int init_data(t_data *data, int ac, char **av)
 		pthread_mutex_init(&data->forks[i], NULL);
 		i++;
 	}
-	pthread_mutex_init(&data->wmutex, NULL);
-	pthread_mutex_init(&data->dead_mutex, NULL);
-	pthread_mutex_init(&data->round, NULL);
-
+	pthread_mutex_init(&data->mxwrite, NULL);
+	pthread_mutex_init(&data->mxdead, NULL);
 
 	fprintf(stderr, "Memory allocated for forks\n");
 	data->philo = malloc(sizeof(t_philo) * data->philon);
@@ -58,92 +56,24 @@ int init_data(t_data *data, int ac, char **av)
 
 void *philo_routine(void *arg)
 {
-	t_philo *philo = (t_philo *)arg;
-	t_data  *data = philo->data;
-	
-	pthread_mutex_lock(&data->round);
-	data->round = 1;
-	pthread_mutex_unlock(&data->round);
+    t_philo *philo = arg;
 
-	while (1)
-	{
-		if(data->philon % 2 == 0)
-		{
-			if(pairoutine(philo, data) == 1)
-				return(NULL);
-		}
+    while (!testdeath(philo))
+    {
+		if(philo->data->philon == 1)
+			usleep(1);
 		else
 		{
-			if(impairoutine(philo, data) == 1)
+			if(philo->emealn != philo->data->must_eat_count)
+				take_forks_and_eat(philo);
+			if(testdeath(philo))
 				return(NULL);
-		}
-		if(testdeath(philo) == 1)
-        		return(NULL);
-		pthread_mutex_lock(&data->round);
-		// if (&data->round == 3 || (data->philon % 2 == 0 && &data->round == 2))
-		// 	data->round = 0;
-		// data->round++;
-		// int current = &data->round;
-		pthread_mutex_unlock(&data->round);
-
-		printf("round %d\n", current);
-
+			if(philo->emealn != philo->data->must_eat_count)
+				go_to_sleep_and_think(philo);
+    	}		
 	}
-	return (NULL);
+    return (NULL);
 }
-
-
-
-int	impairoutine(t_philo *philo, t_data *data)
-{
-	if (data->round == 1)
-	{
-		if ((philo->id % 2 == 1) && (philo->id != data->philon))
-			take_forks_and_eat(philo);
-		else
-			if(go_to_sleep_and_think(philo) == 1)
-				return(1);
-	}
-	else if (data->round == 2)
-	{
-		if (philo->id % 2 == 0)
-			take_forks_and_eat(philo);
-		else
-			if(go_to_sleep_and_think(philo) == 1)
-				return(1);
-	}
-	else if (data->round == 3)
-	{
-		if ((philo->id % 2 == 1) && (philo->id != 1))
-			take_forks_and_eat(philo);
-		else
-			if(go_to_sleep_and_think(philo) == 1)
-				return(1);
-	}
-	return(0);
-}
-
-int	pairoutine(t_philo *philo, t_data *data)
-{
-	if(data->round == 1)
-	{
-		if ((philo->id % 2 == 1))
-			take_forks_and_eat(philo);
-		else
-			if(go_to_sleep_and_think(philo) == 1)
-				return(1);
-	}
-	else
-	{
-		if ((philo->id % 2 == 0))
-			take_forks_and_eat(philo);
-		else
-			if(go_to_sleep_and_think(philo) == 1)
-				return(1);
-	}
-	return(0);
-}
-
 
 int init_philo(t_data *data)
 {
@@ -152,8 +82,9 @@ int init_philo(t_data *data)
 	i = 0;
 	while (i < data->philon)
 	{
-
-        	data->philo[i].lmeal = getime();
+		data->philo[i].emealn = 0;
+        data->philo[i].lmeal = getime();
+		// printf("\n%d\n", data->philo[i].lmeal);
 		data->philo[i].id = i + 1;
 		data->philo[i].lfork = i;
 		data->philo[i].rfork = (i + 1) % data->philon;
