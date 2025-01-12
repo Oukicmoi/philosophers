@@ -6,7 +6,7 @@
 /*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 17:58:26 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/01/12 22:01:24 by gtraiman         ###   ########.fr       */
+/*   Updated: 2025/01/13 00:12:53 by gtraiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ void *philo_routine(void *arg)
 {
     t_philo *philo = arg;
 
-    while (!testdeath(philo))
+    while (!testdeath(philo, 1))
     {
 		if(philo->data->philon == 1)
 			usleep(1);
@@ -66,8 +66,9 @@ void *philo_routine(void *arg)
 		{
 			if(philo->emealn != philo->data->must_eat_count)
 				take_forks_and_eat(philo);
-			if(testdeath(philo))
+			if(testdeath(philo, 0))
 				return(NULL);
+			// printf("here\n");
 			if(philo->emealn != philo->data->must_eat_count)
 				go_to_sleep_and_think(philo);
     	}		

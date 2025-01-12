@@ -6,7 +6,7 @@
 /*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 18:14:34 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/01/12 23:16:25 by gtraiman         ###   ########.fr       */
+/*   Updated: 2025/01/13 00:26:20 by gtraiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ void take_forks_and_eat(t_philo *philo)
 {
 	t_data *data = philo->data;
 
-	if(testdeath(philo))
+	if(testdeath(philo, 0))
 		return ;
 	if (philo->id % 2 == 0)
 	{
@@ -90,6 +90,16 @@ void take_forks_and_eat(t_philo *philo)
 	pthread_mutex_unlock(&data->forks[philo->lfork]);
 }
 
+// int	usleep(size_t ms)
+// {
+// 	size_t	start;
+
+// 	start = getime();
+// 	while ((getime() - start) < ms)
+// 		usleep(100);
+// 	return (0);
+// }
+
 void print_action(t_philo *philo, char *str)
 {
 	t_data *data = philo->data;
@@ -106,26 +116,34 @@ int go_to_sleep_and_think(t_philo *philo)
 
 	print_action(philo, "is sleeping\n");
 	usleep(data->ttsleep * 1000);
-	if(testdeath(philo))
+	print_action(philo, "done sleeping\n");
+	if(testdeath(philo, 0))
 		return(0);
 	print_action(philo, "is thinking\n");
-	usleep(data->tteat * 900);
+	usleep(data->tteat * 1000);
+	if(testdeath(philo, 0))
+		return(0);
 
     return(0);
 }
 
-int testdeath(t_philo *philo)
+int testdeath(t_philo *philo, int i)
 {
     t_data *data = philo->data;
-    long int now = getime();
 
+	(void)i;
     pthread_mutex_lock(&data->mxdead);
     if (data->isdead == 1)
     {
         pthread_mutex_unlock(&data->mxdead);
         return (1);
     }
-    if (now - philo->lmeal >= data->ttdie)
+//     if(i == 1)
+//     {
+// 	printf("id :%d\n",philo->id);
+// 	printf("lmeal :%ld\n", getime() - philo->lmeal);
+//     }
+    if (getime() - philo->lmeal >= data->ttdie)
     {
         data->isdead = 1;
         pthread_mutex_unlock(&data->mxdead);

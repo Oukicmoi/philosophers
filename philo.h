@@ -6,7 +6,7 @@
 /*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 17:58:40 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/01/12 23:07:15 by gtraiman         ###   ########.fr       */
+/*   Updated: 2025/01/13 00:08:00 by gtraiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,8 @@ void take_forks_and_eat(t_philo *philo);
 void *philo_routine(void *arg);
 int go_to_sleep_and_think(t_philo *philo);
 long getime(void);
-int testdeath(t_philo *philo);
+int testdeath(t_philo *philo, int i);
 void print_action(t_philo *philo, char *str);
+// int	usleep(size_t ms);
 
 #endif
