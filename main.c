@@ -6,7 +6,7 @@
 /*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 17:41:58 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/01/13 01:17:00 by gtraiman         ###   ########.fr       */
+/*   Updated: 2025/01/13 02:41:34 by gtraiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,32 @@ int	create_philos(t_data *data)
 			return (1);
 		i = i + 2;
 	}
+	return (0);
+}
+
+void	print_action(t_philo *philo, char *str)
+{
+	t_data	*data;
+
+	data = philo->data;
+	pthread_mutex_lock(&data->mxwrite);
+	printf("%ld %d %s", getime() - data->start, philo->id, str);
+	pthread_mutex_unlock(&data->mxwrite);
+}
+
+int	go_to_sleep_and_think(t_philo *philo)
+{
+	t_data	*data;
+
+	data = philo->data;
+	print_action(philo, "is sleeping\n");
+	usleep(data->ttsleep * 1000);
+	if (testdeath(philo))
+		return (0);
+	print_action(philo, "is thinking\n");
+	usleep(data->tteat * 1000);
+	if (testdeath(philo))
+		return (0);
 	return (0);
 }
 

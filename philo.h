@@ -6,7 +6,7 @@
 /*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 17:58:40 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/01/13 01:26:33 by gtraiman         ###   ########.fr       */
+/*   Updated: 2025/01/13 02:39:56 by gtraiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,11 +60,13 @@ int			parse(char **av);
 int			init_philo(t_data *data);
 int			init_data(t_data *data, int ac, char **av);
 void		cleanup(t_data *data);
-void		take_forks_and_eat(t_philo *philo);
+int			take_forks_and_eat(t_philo *philo);
 void		*philo_routine(void *arg);
 int			go_to_sleep_and_think(t_philo *philo);
 long		getime(void);
 int			testdeath(t_philo *philo);
 void		print_action(t_philo *philo, char *str);
+void		ft_unlock(t_philo *philo, t_data *data);
+int			aaah(t_philo *philo, t_data *data);
 
 #endif

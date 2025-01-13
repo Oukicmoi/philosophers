@@ -6,7 +6,7 @@
 /*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 18:14:34 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/01/13 01:14:27 by gtraiman         ###   ########.fr       */
+/*   Updated: 2025/01/13 02:41:56 by gtraiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,8 @@ int	ft_atoi(const char *nptr)
 		if (nb < 0)
 			return (-1);
 	}
+	if (*nptr)
+		return (-1);
 	return (nb * signe);
 }
 
@@ -55,19 +57,39 @@ void	cleanup(t_data *data)
 	free(data->philo);
 }
 
-void	take_forks_and_eat(t_philo *philo)
+int	take_forks_and_eat(t_philo *philo)
 {
 	t_data	*data;
 
 	data = philo->data;
+	if (aaah(philo, data) == 1)
+		return (1);
+	print_action(philo, "is eating\n");
+	usleep(data->tteat * 1000);
+	ft_unlock(philo, data);
 	if (testdeath(philo))
-		return ;
+		return (1);
+	philo->lmeal = getime();
+	philo->emealn++;
+	return (0);
+}
+
+void	ft_unlock(t_philo *philo, t_data *data)
+{
+	pthread_mutex_unlock(&data->forks[philo->rfork]);
+	pthread_mutex_unlock(&data->forks[philo->lfork]);
+}
+
+int	aaah(t_philo *philo, t_data *data)
+{
 	if (philo->id % 2 == 0)
 	{
 		pthread_mutex_lock(&data->forks[philo->rfork]);
 		print_action(philo, "has taken a fork\n");
 		pthread_mutex_lock(&data->forks[philo->lfork]);
 		print_action(philo, "has taken a fork\n");
+		if (testdeath(philo))
+			return (ft_unlock(philo, data), 1);
 	}
 	else
 	{
@@ -75,38 +97,8 @@ void	take_forks_and_eat(t_philo *philo)
 		print_action(philo, "has taken a fork\n");
 		pthread_mutex_lock(&data->forks[philo->rfork]);
 		print_action(philo, "has taken a fork\n");
+		if (testdeath(philo))
+			return (ft_unlock(philo, data), 1);
 	}
-	print_action(philo, "is eating\n");
-	usleep(data->tteat * 1000);
-	philo->lmeal = getime();
-	philo->emealn++;
-	pthread_mutex_unlock(&data->forks[philo->rfork]);
-	pthread_mutex_unlock(&data->forks[philo->lfork]);
-}
-
-void	print_action(t_philo *philo, char *str)
-{
-	t_data	*data;
-
-	data = philo->data;
-	pthread_mutex_lock(&data->mxwrite);
-	printf("%ld %d %s", getime() - data->start, philo->id, str);
-	pthread_mutex_unlock(&data->mxwrite);
-}
-
-int	go_to_sleep_and_think(t_philo *philo)
-{
-	t_data	*data;
-
-	data = philo->data;
-	print_action(philo, "is sleeping\n");
-	usleep(data->ttsleep * 1000);
-	print_action(philo, "done sleeping\n");
-	if (testdeath(philo))
-		return (0);
-	print_action(philo, "is thinking\n");
-	usleep(data->tteat * 1000);
-	if (testdeath(philo))
-		return (0);
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 17:58:26 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/01/13 01:18:47 by gtraiman         ###   ########.fr       */
+/*   Updated: 2025/01/13 02:39:29 by gtraiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,11 +52,16 @@ void	*philo_routine(void *arg)
 		else
 		{
 			if (philo->emealn != philo->data->must_eat_count)
-				take_forks_and_eat(philo);
+			{
+				if (take_forks_and_eat(philo))
+					return (NULL);
+			}
 			if (testdeath(philo))
 				return (NULL);
 			if (philo->emealn != philo->data->must_eat_count)
 				go_to_sleep_and_think(philo);
+			else
+				return (NULL);
 		}		
 	}
 	return (NULL);
@@ -95,7 +100,7 @@ int	testdeath(t_philo *philo)
 	{
 		data->isdead = 1;
 		pthread_mutex_unlock(&data->mxdead);
-		print_action(philo, "is dead\n");
+		print_action(philo, "died\n");
 		return (1);
 	}
 	pthread_mutex_unlock(&data->mxdead);
