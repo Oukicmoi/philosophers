@@ -6,7 +6,7 @@
 /*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 17:58:26 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/01/13 09:45:52 by gtraiman         ###   ########.fr       */
+/*   Updated: 2025/01/13 10:34:52 by gtraiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ void	*philo_routine(void *arg)
 	t_philo	*philo;
 
 	philo = arg;
+	printf("debut de :%d\n", philo->id);
 	while (!testdeath(philo))
 	{
 		if (philo->data->philon == 1)

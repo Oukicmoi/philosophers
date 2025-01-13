@@ -6,7 +6,7 @@
 /*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 18:14:34 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/01/13 09:44:54 by gtraiman         ###   ########.fr       */
+/*   Updated: 2025/01/13 10:46:03 by gtraiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,8 @@ int	take_forks_and_eat(t_philo *philo)
 	data = philo->data;
 	if (aaah(philo, data) == 1)
 		return (1);
+	if (testdeath(philo))
+		return (ft_unlock(philo, data, 3), 1);
 	print_action(philo, "is eating\n");
 	if (ft_usleep(data->tteat, philo))
 	{
@@ -94,27 +96,29 @@ int	take_forks_and_eat(t_philo *philo)
 
 int	aaah(t_philo *philo, t_data *data)
 {
+	if (testdeath(philo))
+		return (1);
 	if (philo->id % 2 == 0)
 	{
 		pthread_mutex_lock(&data->forks[philo->rfork]);
-		print_action(philo, "has taken a fork\n");
 		if (testdeath(philo))
 			return (ft_unlock(philo, data, 1), 1);
-		pthread_mutex_lock(&data->forks[philo->lfork]);
 		print_action(philo, "has taken a fork\n");
+		pthread_mutex_lock(&data->forks[philo->lfork]);
 		if (testdeath(philo))
 			return (ft_unlock(philo, data, 3), 1);
+		print_action(philo, "has taken a fork\n");
 	}
 	else
 	{
 		pthread_mutex_lock(&data->forks[philo->lfork]);
-		print_action(philo, "has taken a fork\n");
 		if (testdeath(philo))
 			return (ft_unlock(philo, data, 2), 1);
-		pthread_mutex_lock(&data->forks[philo->rfork]);
 		print_action(philo, "has taken a fork\n");
+		pthread_mutex_lock(&data->forks[philo->rfork]);
 		if (testdeath(philo))
 			return (ft_unlock(philo, data, 3), 1);
+		print_action(philo, "has taken a fork\n");
 	}
 	return (0);
 }
