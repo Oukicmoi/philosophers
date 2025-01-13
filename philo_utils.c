@@ -6,7 +6,7 @@
 /*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 18:14:34 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/01/13 10:46:03 by gtraiman         ###   ########.fr       */
+/*   Updated: 2025/01/13 11:08:31 by gtraiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,8 +96,6 @@ int	take_forks_and_eat(t_philo *philo)
 
 int	aaah(t_philo *philo, t_data *data)
 {
-	if (testdeath(philo))
-		return (1);
 	if (philo->id % 2 == 0)
 	{
 		pthread_mutex_lock(&data->forks[philo->rfork]);
