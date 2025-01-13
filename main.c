@@ -6,7 +6,7 @@
 /*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 17:41:58 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/01/13 02:41:34 by gtraiman         ###   ########.fr       */
+/*   Updated: 2025/01/13 09:40:21 by gtraiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ int	create_philos(t_data *data)
 			return (1);
 		i = i + 2;
 	}
+	usleep(5);
 	i = 1;
 	while (i < data->philon)
 	{
@@ -64,13 +65,14 @@ int	go_to_sleep_and_think(t_philo *philo)
 
 	data = philo->data;
 	print_action(philo, "is sleeping\n");
-	usleep(data->ttsleep * 1000);
+	ft_usleep(data->ttsleep, philo);
 	if (testdeath(philo))
-		return (0);
+		return (1);
 	print_action(philo, "is thinking\n");
-	usleep(data->tteat * 1000);
+	if ((data->tteat * 0.9 + data->tteat + data->ttsleep) < data->ttdie)
+		ft_usleep(data->tteat * 0.9, philo);
 	if (testdeath(philo))
-		return (0);
+		return (1);
 	return (0);
 }
 

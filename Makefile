@@ -6,7 +6,7 @@
 #    By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/07/11 16:45:54 by gtraiman          #+#    #+#              #
-#    Updated: 2025/01/04 21:01:05 by gtraiman         ###   ########.fr        #
+#    Updated: 2025/01/13 09:45:27 by gtraiman         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,8 @@ CFLAGS      = -Werror -Wall -Wextra -I . -g3
 
 SRCS        = main.c \
               philo_utils.c \
-              philo.c
+              philo.c \
+			  philo_utils2.c \
 
 OBJS        = ${SRCS:.c=.o}
 

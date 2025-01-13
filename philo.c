@@ -6,7 +6,7 @@
 /*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 17:58:26 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/01/13 02:39:29 by gtraiman         ###   ########.fr       */
+/*   Updated: 2025/01/13 09:45:52 by gtraiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,14 +52,15 @@ void	*philo_routine(void *arg)
 		else
 		{
 			if (philo->emealn != philo->data->must_eat_count)
-			{
 				if (take_forks_and_eat(philo))
 					return (NULL);
-			}
 			if (testdeath(philo))
 				return (NULL);
 			if (philo->emealn != philo->data->must_eat_count)
-				go_to_sleep_and_think(philo);
+			{
+				if (go_to_sleep_and_think(philo))
+					return (NULL);
+			}
 			else
 				return (NULL);
 		}		
@@ -105,12 +106,4 @@ int	testdeath(t_philo *philo)
 	}
 	pthread_mutex_unlock(&data->mxdead);
 	return (0);
-}
-
-long	getime(void)
-{
-	struct timeval	tv;
-
-	gettimeofday(&tv, NULL);
-	return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
 }
