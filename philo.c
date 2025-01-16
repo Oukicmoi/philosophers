@@ -6,7 +6,7 @@
 /*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 17:58:26 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/01/13 11:02:08 by gtraiman         ###   ########.fr       */
+/*   Updated: 2025/01/16 20:48:10 by gtraiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,8 +100,10 @@ int	testdeath(t_philo *philo)
 	if (getime() - philo->lmeal >= data->ttdie)
 	{
 		data->isdead = 1;
+		pthread_mutex_lock(&data->mxwrite);
+		printf("%ld %d died\n", getime() - data->start, philo->id);
+		pthread_mutex_unlock(&data->mxwrite);
 		pthread_mutex_unlock(&data->mxdead);
-		print_action(philo, "died\n");
 		return (1);
 	}
 	pthread_mutex_unlock(&data->mxdead);

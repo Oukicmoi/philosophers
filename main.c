@@ -6,7 +6,7 @@
 /*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 17:41:58 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/01/13 11:07:35 by gtraiman         ###   ########.fr       */
+/*   Updated: 2025/01/13 17:01:52 by gtraiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	parse(char **av)
 	i = 0;
 	while (av[++i])
 	{
-		if (ft_atoi(av[i]) < 0 || ft_atoi(av[1]) > 200)
+		if (ft_atoi(av[i]) < 0 || ft_atoi(av[1]) > 200 || ft_atoi(av[2]) < 60)
 			return (1);
 	}
 	return (0);
@@ -37,7 +37,7 @@ int	create_philos(t_data *data)
 			return (1);
 		i = i + 2;
 	}
-	usleep(50);
+	usleep(25);
 	i = 0;
 	while (i < data->philon)
 	{
@@ -54,9 +54,14 @@ void	print_action(t_philo *philo, char *str)
 	t_data	*data;
 
 	data = philo->data;
+	if (testdeath(philo))
+		return ;
+	pthread_mutex_lock(&data->mxdead);
 	pthread_mutex_lock(&data->mxwrite);
-	printf("%ld %d %s", getime() - data->start, philo->id, str);
+	if(!data->isdead)
+		printf("%ld %d %s", getime() - data->start, philo->id, str);
 	pthread_mutex_unlock(&data->mxwrite);
+	pthread_mutex_unlock(&data->mxdead);
 }
 
 int	go_to_sleep_and_think(t_philo *philo)

@@ -6,7 +6,7 @@
 /*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 09:43:55 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/01/13 09:45:07 by gtraiman         ###   ########.fr       */
+/*   Updated: 2025/01/13 16:41:16 by gtraiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,5 +30,10 @@ void	ft_unlock(t_philo *philo, t_data *data, int i)
 	{
 		pthread_mutex_unlock(&data->forks[philo->rfork]);
 		pthread_mutex_unlock(&data->forks[philo->lfork]);
-	}		
+	}
+	if (i == 4)
+	{
+		pthread_mutex_unlock(&data->forks[philo->lfork]);
+		pthread_mutex_unlock(&data->forks[philo->rfork]);
+	}	
 }

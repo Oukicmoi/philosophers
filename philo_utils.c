@@ -6,7 +6,7 @@
 /*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 18:14:34 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/01/13 11:08:31 by gtraiman         ###   ########.fr       */
+/*   Updated: 2025/01/16 20:49:40 by gtraiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ int	ft_usleep(long int ms, t_philo *philo)
 	start = getime();
 	while (getime() - start < ms)
 	{
-		usleep(10);
+		usleep(1000);
 		if (testdeath(philo))
 			return (1);
 	}
@@ -74,19 +74,24 @@ int	ft_usleep(long int ms, t_philo *philo)
 int	take_forks_and_eat(t_philo *philo)
 {
 	t_data	*data;
+	int	i;
 
 	data = philo->data;
 	if (aaah(philo, data) == 1)
 		return (1);
+	if (philo->id % 2 == 0)
+		i = 3;
+	else
+		i = 4;
 	if (testdeath(philo))
-		return (ft_unlock(philo, data, 3), 1);
+		return (ft_unlock(philo, data, i), 1);
 	print_action(philo, "is eating\n");
 	if (ft_usleep(data->tteat, philo))
 	{
 		if (testdeath(philo))
-			return (ft_unlock(philo, data, 3), 1);
+			return (ft_unlock(philo, data, i), 1);
 	}
-	ft_unlock(philo, data, 3);
+	ft_unlock(philo, data, i);
 	if (testdeath(philo))
 		return (1);
 	philo->lmeal = getime();
@@ -115,7 +120,7 @@ int	aaah(t_philo *philo, t_data *data)
 		print_action(philo, "has taken a fork\n");
 		pthread_mutex_lock(&data->forks[philo->rfork]);
 		if (testdeath(philo))
-			return (ft_unlock(philo, data, 3), 1);
+			return (ft_unlock(philo, data, 4), 1);
 		print_action(philo, "has taken a fork\n");
 	}
 	return (0);
