@@ -6,7 +6,7 @@
 /*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 18:14:34 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/01/17 13:50:48 by gtraiman         ###   ########.fr       */
+/*   Updated: 2025/01/17 15:25:46 by gtraiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ int	ft_usleep(long int ms, t_philo *philo)
 int	take_forks_and_eat(t_philo *philo)
 {
 	t_data	*data;
-	int	i;
+	int		i;
 
 	data = philo->data;
 	if (aaah(philo, data) == 1)

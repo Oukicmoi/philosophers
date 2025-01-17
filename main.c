@@ -6,7 +6,7 @@
 /*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 17:41:58 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/01/17 15:14:51 by gtraiman         ###   ########.fr       */
+/*   Updated: 2025/01/17 15:25:34 by gtraiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ void	print_action(t_philo *philo, char *str)
 		return ;
 	pthread_mutex_lock(&data->mxdead);
 	pthread_mutex_lock(&data->mxwrite);
-	if(!data->isdead)
+	if (!data->isdead)
 		printf("%ld %d %s", getime() - data->start, philo->id, str);
 	pthread_mutex_unlock(&data->mxwrite);
 	pthread_mutex_unlock(&data->mxdead);
@@ -101,7 +101,7 @@ int	main(int ac, char **av)
 		pthread_join(data.philo[i].thread, NULL);
 		i++;
 	}
-	pthread_join(data.moni,NULL);
+	pthread_join(data.moni, NULL);
 	cleanup(&data);
 	return (0);
 }

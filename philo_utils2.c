@@ -6,7 +6,7 @@
 /*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 09:43:55 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/01/17 13:50:25 by gtraiman         ###   ########.fr       */
+/*   Updated: 2025/01/17 15:27:24 by gtraiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,18 +40,20 @@ void	ft_unlock(t_philo *philo, t_data *data, int i)
 
 void	*moniroutine(void *arg)
 {
-    t_data *data = (t_data *)arg;
+	t_data	*data;
+	int		i;
 
-    while (1)
-    {
-        int i = 0;
-        while (i < data->philon)
-        {
-            if (testdeath(&data->philo[i]))
-                return (NULL);
-            i++;
-        }
-        usleep(1000);
-    }
-    return (NULL);
+	data = (t_data *)arg;
+	while (1)
+	{
+		i = 0;
+		while (i < data->philon)
+		{
+			if (testdeath(&data->philo[i]))
+				return (NULL);
+			i++;
+		}
+		usleep(1000);
+	}
+	return (NULL);
 }
