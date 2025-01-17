@@ -6,7 +6,7 @@
 /*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 17:58:40 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/01/13 09:41:51 by gtraiman         ###   ########.fr       */
+/*   Updated: 2025/01/17 13:10:16 by gtraiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,8 +51,10 @@ typedef struct s_data
 	long int			start;
 	pthread_mutex_t		*forks;
 	pthread_mutex_t		mxwrite;
+	pthread_mutex_t		mxmeal;
 	pthread_mutex_t		mxdead;
 	t_philo				*philo;
+	pthread_t			moni;
 }	t_data;
 
 int			ft_atoi(const char *nptr);
@@ -69,5 +71,6 @@ void		print_action(t_philo *philo, char *str);
 void		ft_unlock(t_philo *philo, t_data *data, int i);
 int			aaah(t_philo *philo, t_data *data);
 int			ft_usleep(long int ms, t_philo *philo);
+void		*moniroutine(void *arg);
 
 #endif

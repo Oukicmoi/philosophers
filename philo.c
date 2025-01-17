@@ -6,7 +6,7 @@
 /*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 17:58:26 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/01/16 20:48:10 by gtraiman         ###   ########.fr       */
+/*   Updated: 2025/01/17 15:01:25 by gtraiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ int	init_data(t_data *data, int ac, char **av)
 		pthread_mutex_init(&data->forks[i], NULL);
 	pthread_mutex_init(&data->mxwrite, NULL);
 	pthread_mutex_init(&data->mxdead, NULL);
+	pthread_mutex_init(&data->mxmeal, NULL);
 	data->philo = malloc(sizeof(t_philo) * data->philon);
 	if (!data->philo)
 		return (free(data->forks), 1);
@@ -97,8 +98,10 @@ int	testdeath(t_philo *philo)
 		pthread_mutex_unlock(&data->mxdead);
 		return (1);
 	}
+	pthread_mutex_lock(&data->mxmeal);
 	if (getime() - philo->lmeal >= data->ttdie)
 	{
+		pthread_mutex_unlock(&data->mxmeal);
 		data->isdead = 1;
 		pthread_mutex_lock(&data->mxwrite);
 		printf("%ld %d died\n", getime() - data->start, philo->id);
@@ -106,6 +109,7 @@ int	testdeath(t_philo *philo)
 		pthread_mutex_unlock(&data->mxdead);
 		return (1);
 	}
+	pthread_mutex_unlock(&data->mxmeal);
 	pthread_mutex_unlock(&data->mxdead);
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 18:14:34 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/01/16 20:49:40 by gtraiman         ###   ########.fr       */
+/*   Updated: 2025/01/17 13:50:48 by gtraiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,16 +86,16 @@ int	take_forks_and_eat(t_philo *philo)
 	if (testdeath(philo))
 		return (ft_unlock(philo, data, i), 1);
 	print_action(philo, "is eating\n");
+	pthread_mutex_lock(&data->mxmeal);
+	philo->lmeal = getime();
+	pthread_mutex_unlock(&data->mxmeal);
+	philo->emealn++;
 	if (ft_usleep(data->tteat, philo))
 	{
 		if (testdeath(philo))
 			return (ft_unlock(philo, data, i), 1);
 	}
 	ft_unlock(philo, data, i);
-	if (testdeath(philo))
-		return (1);
-	philo->lmeal = getime();
-	philo->emealn++;
 	return (0);
 }
 
