@@ -6,7 +6,7 @@
 /*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 17:58:26 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/01/17 15:01:25 by gtraiman         ###   ########.fr       */
+/*   Updated: 2025/01/17 16:04:12 by gtraiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,7 @@ int	init_philo(t_data *data)
 	i = 0;
 	while (i < data->philon)
 	{
+		data->philo[i].thread = 0;
 		data->philo[i].emealn = 0;
 		data->philo[i].lmeal = getime();
 		data->philo[i].id = i + 1;

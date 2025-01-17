@@ -6,7 +6,7 @@
 /*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 17:41:58 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/01/17 15:25:34 by gtraiman         ###   ########.fr       */
+/*   Updated: 2025/01/17 15:51:05 by gtraiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,6 @@ int	go_to_sleep_and_think(t_philo *philo)
 int	main(int ac, char **av)
 {
 	t_data	data;
-	int		i;
 
 	if (ac < 5 || ac > 6 || parse(av) != 0)
 		return (printf("Error\n"), 1);
@@ -95,13 +94,6 @@ int	main(int ac, char **av)
 		return (printf("Error\n"), 1);
 	if (create_philos(&data) != 0)
 		return (printf("Error\n"), cleanup(&data), 1);
-	i = 0;
-	while (i < data.philon)
-	{
-		pthread_join(data.philo[i].thread, NULL);
-		i++;
-	}
-	pthread_join(data.moni, NULL);
 	cleanup(&data);
 	return (0);
 }

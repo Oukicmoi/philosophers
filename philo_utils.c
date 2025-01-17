@@ -6,7 +6,7 @@
 /*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 18:14:34 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/01/17 15:25:46 by gtraiman         ###   ########.fr       */
+/*   Updated: 2025/01/17 16:12:35 by gtraiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,17 @@ void	cleanup(t_data *data)
 	int	i;
 
 	i = 0;
+	while (i < data->philon)
+	{
+		if (data->philo[i].thread)
+			pthread_join(data->philo[i].thread, NULL);
+		i++;
+	}
+	pthread_join(data->moni, NULL);
+	i = 0;
+	pthread_mutex_lock(&data->mxdead);
+	data->isdead = 1;
+	pthread_mutex_unlock(&data->mxdead);
 	while (i < data->philon)
 	{
 		pthread_mutex_destroy(&data->forks[i]);
