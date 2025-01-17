@@ -6,7 +6,7 @@
 /*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 17:41:58 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/01/17 17:29:31 by gtraiman         ###   ########.fr       */
+/*   Updated: 2025/01/17 18:22:55 by gtraiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,8 @@ int	parse(char **av)
 	i = 0;
 	while (av[++i])
 	{
-		if (ft_atoi(av[i]) < 0 || ft_atoi(av[1]) > 200 || ft_atoi(av[2]) < 60)
+		if (ft_atoi(av[i]) < 0 || ft_atoi(av[1]) > 200 || ft_atoi(av[2]) < 60
+			|| ft_atoi(av[1]) < 1)
 			return (1);
 	}
 	return (0);

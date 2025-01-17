@@ -6,13 +6,13 @@
 #    By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/07/11 16:45:54 by gtraiman          #+#    #+#              #
-#    Updated: 2025/01/13 14:39:39 by gtraiman         ###   ########.fr        #
+#    Updated: 2025/01/17 18:24:59 by gtraiman         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME        = philo
 CC          = cc
-CFLAGS      = -Werror -Wall -Wextra -I . -g3
+CFLAGS      = -Werror -Wall -Wextra 
 
 SRCS        = main.c \
               philo_utils.c \
