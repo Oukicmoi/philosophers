@@ -6,7 +6,7 @@
 /*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 17:41:58 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/01/17 15:51:05 by gtraiman         ###   ########.fr       */
+/*   Updated: 2025/01/17 17:29:31 by gtraiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,8 +55,6 @@ void	print_action(t_philo *philo, char *str)
 	t_data	*data;
 
 	data = philo->data;
-	if (testdeath(philo))
-		return ;
 	pthread_mutex_lock(&data->mxdead);
 	pthread_mutex_lock(&data->mxwrite);
 	if (!data->isdead)
@@ -70,17 +68,11 @@ int	go_to_sleep_and_think(t_philo *philo)
 	t_data	*data;
 
 	data = philo->data;
-	if (testdeath(philo))
-		return (1);
 	print_action(philo, "is sleeping\n");
 	ft_usleep(data->ttsleep, philo);
-	if (testdeath(philo))
-		return (1);
 	print_action(philo, "is thinking\n");
 	if ((data->tteat * 0.9 + data->tteat + data->ttsleep) < data->ttdie)
 		ft_usleep(data->tteat * 0.9, philo);
-	if (testdeath(philo))
-		return (1);
 	return (0);
 }
 
@@ -88,6 +80,7 @@ int	main(int ac, char **av)
 {
 	t_data	data;
 
+	data.argc = ac;
 	if (ac < 5 || ac > 6 || parse(av) != 0)
 		return (printf("Error\n"), 1);
 	if (init_data(&data, ac, av) != 0 || init_philo(&data) != 0)

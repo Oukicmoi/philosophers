@@ -6,7 +6,7 @@
 /*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 17:58:40 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/01/17 15:49:38 by gtraiman         ###   ########.fr       */
+/*   Updated: 2025/01/17 17:28:45 by gtraiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ typedef struct s_philo
 
 typedef struct s_data
 {
+	int					argc;
 	int					philon;
 	int					ttdie;
 	int					tteat;
@@ -72,5 +73,6 @@ void		ft_unlock(t_philo *philo, t_data *data, int i);
 int			aaah(t_philo *philo, t_data *data);
 int			ft_usleep(long int ms, t_philo *philo);
 void		*moniroutine(void *arg);
+void		*ft_isdead(t_philo *philo);
 
 #endif

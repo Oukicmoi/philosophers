@@ -6,7 +6,7 @@
 /*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 18:14:34 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/01/17 16:12:35 by gtraiman         ###   ########.fr       */
+/*   Updated: 2025/01/17 17:49:26 by gtraiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,9 +54,7 @@ void	cleanup(t_data *data)
 	}
 	pthread_join(data->moni, NULL);
 	i = 0;
-	pthread_mutex_lock(&data->mxdead);
-	data->isdead = 1;
-	pthread_mutex_unlock(&data->mxdead);
+	ft_isdead(data->philo);
 	while (i < data->philon)
 	{
 		pthread_mutex_destroy(&data->forks[i]);
@@ -99,8 +97,8 @@ int	take_forks_and_eat(t_philo *philo)
 	print_action(philo, "is eating\n");
 	pthread_mutex_lock(&data->mxmeal);
 	philo->lmeal = getime();
-	pthread_mutex_unlock(&data->mxmeal);
 	philo->emealn++;
+	pthread_mutex_unlock(&data->mxmeal);
 	if (ft_usleep(data->tteat, philo))
 	{
 		if (testdeath(philo))
