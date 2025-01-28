@@ -6,7 +6,7 @@
 /*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 17:58:26 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/01/17 17:29:14 by gtraiman         ###   ########.fr       */
+/*   Updated: 2025/01/17 19:24:35 by gtraiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,7 @@ int	init_philo(t_data *data)
 	int	i;
 
 	i = 0;
+	data->moni = 0;
 	while (i < data->philon)
 	{
 		data->philo[i].thread = 0;

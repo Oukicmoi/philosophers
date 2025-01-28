@@ -6,7 +6,7 @@
 /*   By: gtraiman <gtraiman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 18:14:34 by gtraiman          #+#    #+#             */
-/*   Updated: 2025/01/17 17:49:26 by gtraiman         ###   ########.fr       */
+/*   Updated: 2025/01/17 19:35:51 by gtraiman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,8 @@ void	cleanup(t_data *data)
 			pthread_join(data->philo[i].thread, NULL);
 		i++;
 	}
-	pthread_join(data->moni, NULL);
+	if (data->moni)
+		pthread_join(data->moni, NULL);
 	i = 0;
 	ft_isdead(data->philo);
 	while (i < data->philon)
